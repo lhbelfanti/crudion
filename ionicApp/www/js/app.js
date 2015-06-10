@@ -24,6 +24,15 @@ angular.module('ionicApp', ['ionic', 'ionicApp.services', 'ionicApp.controllers'
                   }
               }
           })
+          .state('menu.movieDescription', {
+              url: "/movieDescription",
+              views: {
+                  'menuContent': {
+                      templateUrl: "actions/movieDescription.html",
+                      controller: 'MovieDescriptionController'
+                  }
+              }
+          })
           .state('menu.add', {
               url: "/add",
               views: {

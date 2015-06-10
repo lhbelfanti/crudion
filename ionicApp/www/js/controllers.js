@@ -13,8 +13,15 @@ angular.module('ionicApp.controllers', [])
         };
     })
 
-    .controller('HomeController', function($scope, $stateParams, moviesService) {
-        $scope.movies = moviesService.all();
+    .controller('HomeController', function($rootScope, $stateParams, moviesService) {
+        $rootScope.movies = moviesService.all();
+        $rootScope.selectMovie = function(movie){
+            $rootScope.selectedMovieId = movie.id;
+        };
+    })
+
+    .controller('MovieDescriptionController', function($scope, $stateParams, moviesService) {
+        $scope.selectedMovie = moviesService.get($scope.selectedMovieId);
     })
 
     .controller('AddController', function($scope) {
