@@ -1,6 +1,16 @@
-<ion-view view-title="Welcome">
+<ion-view view-title="Kiné: Movies ABM">
     <ion-content class="padding">
-        <p>Swipe to the right to reveal the left menu.</p>
-        <p>(On desktop click and drag from left to right)</p>
+        <div class="list">
+
+            <a ng-repeat="movie in movies"
+               href="#/{{movie.id}}"
+               class="item item-thumbnail-left">
+
+                <img ng-src="{{ movie.image }}">
+                <h2>{{ movie.title }}</h2>
+                <h4>{{ movie.description }}</h4>
+            </a>
+
+        </div>
     </ion-content>
 </ion-view>

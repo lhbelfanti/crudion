@@ -13,8 +13,8 @@ angular.module('ionicApp.controllers', [])
         };
     })
 
-    .controller('HomeController', function($scope) {
-
+    .controller('HomeController', function($scope, $stateParams, moviesService) {
+        $scope.movies = moviesService.all();
     })
 
     .controller('AddController', function($scope) {
