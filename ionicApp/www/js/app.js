@@ -11,15 +11,15 @@ angular.module('ionicApp', ['ionic', 'ionicApp.services', 'ionicApp.controllers'
 
       $stateProvider
           .state('menu', {
-              url: "/action",
+              url: "/menu",
               abstract: true,
-              templateUrl: "actions/sideMenu.html"
+              templateUrl: "templates/sideMenu.html"
           })
           .state('menu.home', {
               url: "/home",
               views: {
                   'menuContent': {
-                      templateUrl: "actions/home.html",
+                      templateUrl: "templates/home.html",
                       controller: 'HomeController'
                   }
               }
@@ -28,7 +28,7 @@ angular.module('ionicApp', ['ionic', 'ionicApp.services', 'ionicApp.controllers'
               url: "/movieDescription",
               views: {
                   'menuContent': {
-                      templateUrl: "actions/movieDescription.html",
+                      templateUrl: "templates/movieDescription.html",
                       controller: 'MovieDescriptionController'
                   }
               }
@@ -37,7 +37,7 @@ angular.module('ionicApp', ['ionic', 'ionicApp.services', 'ionicApp.controllers'
               url: "/add",
               views: {
                   'menuContent' :{
-                      templateUrl: "actions/add.html",
+                      templateUrl: "templates/add.html",
                       controller: "AddController"
                   }
               }
@@ -46,7 +46,7 @@ angular.module('ionicApp', ['ionic', 'ionicApp.services', 'ionicApp.controllers'
               url: "/modify",
               views: {
                   'menuContent' :{
-                      templateUrl: "actions/modify.html",
+                      templateUrl: "templates/modify.html",
                       controller: "ModifyController"
                   }
               }
@@ -55,13 +55,13 @@ angular.module('ionicApp', ['ionic', 'ionicApp.services', 'ionicApp.controllers'
               url: "/delete",
               views: {
                   'menuContent' :{
-                      templateUrl: "actions/delete.html",
+                      templateUrl: "templates/delete.html",
                       controller: "DeleteController"
                   }
               }
           });
 
-      $urlRouterProvider.otherwise("/action/home");
+      $urlRouterProvider.otherwise("/menu/home");
 
     });
 
