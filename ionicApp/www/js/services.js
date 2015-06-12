@@ -35,6 +35,9 @@ angular.module('ionicApp.services', [])
         get: function(movieId) {
           // Simple index lookup
           return movies[movieId];
+        },
+        addMovie: function(movie) {
+            movies.push(movie);
         }
       }
     });

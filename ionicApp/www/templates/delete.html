@@ -1,18 +1,11 @@
-<ion-view view-title="Delete">
-    <ion-content>
+<ion-view view-title="Borrar película">
+    <ion-content class="padding">
         <div class="list">
-            <ion-toggle ng-repeat="attendee in attendees | orderBy:'firstname' | orderBy:'lastname'"
-                        ng-model="attendee.arrived"
-                        ng-change="arrivedChange(attendee)">
-                {{ attendee.firstname }}
-                {{ attendee.lastname }}
-            </ion-toggle>
-            <div class="item item-divider">
-                Activity
-            </div>
-            <div class="item" ng-repeat="msg in activity">
-                {{ msg }}
-            </div>
+            <a ng-repeat="movie in movies" class="item item-thumbnail-left" href="#/menu/movieDescription" ng-click="selectMovie(movie)">
+                <img ng-src="{{ movie.image }}">
+                <h2>{{ movie.title }}</h2>
+                <h4>{{ movie.description }}</h4>
+            </a>
         </div>
     </ion-content>
 </ion-view>

@@ -1,36 +1,19 @@
-<ion-view view-title="Add">
+<ion-view view-title="Agregar pelicula">
     <ion-content>
         <form class="list" ng-show="showForm">
-            <div class="item item-divider">
-                Attendee Info
-            </div>
             <label class="item item-input">
-                <input type="text" placeholder="First Name" ng-model="attendee.firstname">
+                <input type="text" placeholder="Título" ng-model="newMovie.title">
             </label>
             <label class="item item-input">
-                <input type="text" placeholder="Last Name" ng-model="attendee.lastname">
+                <input type="text" placeholder="Descripción" ng-model="newMovie.description">
             </label>
-            <div class="item item-divider">
-                Shirt Size
-            </div>
-            <ion-radio ng-repeat="shirtSize in shirtSizes"
-                       ng-value="shirtSize.value"
-                       ng-model="attendee.shirtSize">
-                {{ shirtSize.text }}
-            </ion-radio>
-            <div class="item item-divider">
-                Lunch
-            </div>
-            <ion-toggle ng-model="attendee.vegetarian">
-                Vegetarian
-            </ion-toggle>
             <div class="padding">
-                <button class="button button-block" ng-click="submit()">Checkin</button>
+                <button class="button button-block button-balanced" ng-click="submit()">Agregar</button>
             </div>
         </form>
 
-        <div ng-hide="showForm">
-            <pre ng-bind="attendee | json"></pre>
-        </div>
+        <!--div ng-hide="showForm">
+            <pre ng-bind="movie | json"></pre>
+        </div-->
     </ion-content>
 </ion-view>

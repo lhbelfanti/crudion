@@ -24,24 +24,38 @@ angular.module('ionicApp.controllers', [])
         $scope.selectedMovie = moviesService.get($scope.selectedMovieId);
     })
 
-    .controller('AddController', function($scope) {
+    .controller('AddController', function($scope, $ionicPopup, moviesService) {
 
         $scope.showForm = true;
-
-        $scope.shirtSizes = [
-            { text: 'Large', value: 'L' },
-            { text: 'Medium', value: 'M' },
-            { text: 'Small', value: 'S' }
-        ];
-
-        $scope.attendee = {};
+        $scope.newMovie = {};
+        
         $scope.submit = function() {
-            if(!$scope.attendee.firstname) {
-                alert('Info required');
+            if(!$scope.newMovie.title || !$scope.newMovie.description || !$scope.newMovie) {
+                alert('Ingrese los datos faltantes');
                 return;
             }
-            $scope.showForm = false;
-            $scope.attendees.push($scope.attendee);
+            
+            moviesService.addMovie($scope.newMovie);
+            $scope.showConfirm();
+        };
+
+        $scope.showConfirm = function() {
+            var confirmPopup = $ionicPopup.confirm({
+                title: 'Película agregada con éxito',
+                template: '¿Desea agregar otra película?',
+                cancelText: 'No',
+                cancelType: 'button-assertive',
+                okText: 'Si',
+                okType: 'button-balanced'
+            });
+            confirmPopup.then(function(res) {
+                if(res) {
+                    $scope.newMovie = {};
+                } else {
+                    //window.location.href = "#/menu";
+                }
+                confirmPopup.close();
+            });
         };
     })
 
