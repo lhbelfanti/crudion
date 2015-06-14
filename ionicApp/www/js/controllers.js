@@ -24,19 +24,27 @@ angular.module('ionicApp.controllers', [])
         $scope.selectedMovie = moviesService.get($scope.selectedMovieId);
     })
 
-    .controller('AddController', function($scope, $ionicPopup, moviesService) {
+    .controller('AddController', function($scope, $state, $ionicPopup, moviesService) {
 
+        $scope.image = document.getElementById('imgPlaceHolder');
         $scope.showForm = true;
         $scope.newMovie = {};
         
         $scope.submit = function() {
-            if(!$scope.newMovie.title || !$scope.newMovie.description || !$scope.newMovie) {
-                alert('Ingrese los datos faltantes');
+            if(!$scope.newMovie.title || !$scope.newMovie.description || /*!$scope.newMovie.image ||*/ !$scope.newMovie) {
+                $scope.showAlert();
                 return;
             }
             
             moviesService.addMovie($scope.newMovie);
             $scope.showConfirm();
+        };
+
+        $scope.showAlert = function() {
+            var alertPopup = $ionicPopup.alert({
+                title: 'Datos faltantes',
+                template: 'Falta ingresar datos'
+            });
         };
 
         $scope.showConfirm = function() {
@@ -52,10 +60,47 @@ angular.module('ionicApp.controllers', [])
                 if(res) {
                     $scope.newMovie = {};
                 } else {
-                    //window.location.href = "#/menu";
+                    $state.go('menu.home');
                 }
                 confirmPopup.close();
             });
+        };
+
+        //Camera functions
+        var pictureSource;
+        var destinationType;
+        ionic.Platform.ready(function() {
+            if (!navigator.camera) {
+                return;
+            }
+            pictureSource = navigator.camera.PictureSourceType.PHOTOLIBRARY;
+            destinationType = navigator.camera.DestinationType.FILE_URI;
+        });
+
+        $scope.selectPicture = function() {
+            var options =   {
+                quality: 50,
+                destinationType: destinationType,
+                sourceType: pictureSource,
+                encodingType: 0
+            };
+            
+            if (!navigator.camera) {
+                return;
+            }
+        
+            navigator.camera.getPicture(
+                function (imageURI) {
+                    console.log("got camera success ", imageURI);
+                    $scope.image.src = imageURI;
+                    $scope.newMovie = imageURI;
+                    $scope.$apply();
+                },
+                function (err) {
+                    console.log("got camera error ", err);
+                },
+                options
+            );
         };
     })
 
