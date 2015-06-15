@@ -1,0 +1,27 @@
+<ion-view view-title="Película a modificar">
+    <ion-content>
+        <form class="list" ng-show="showForm">
+            <label class="item item-input">
+                <input type="text" placeholder="Título" ng-model="movieToModify.title">
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Descripción" ng-model="movieToModify.description">
+            </label>
+            <div class="padding">
+                <img style="margin:0px auto;display:block " src="{{ movieToModify.image }}" height="240" width="168" id="imgPlaceHolder">
+            </div>
+            <div class="padding">
+                <a class="button button-energized" ng-click="selectPicture()">
+                    <i class="mdi-image-camera-alt small">Cambiar imagen</i>
+                </a>
+            </div>
+            <div class="padding">
+                <button class="button button-block button-balanced" ng-click="submit()">Modificar</button>
+            </div>
+        </form>
+
+        <!--div ng-hide="showForm">
+            <pre ng-bind="movie | json"></pre>
+        </div-->
+    </ion-content>
+</ion-view>

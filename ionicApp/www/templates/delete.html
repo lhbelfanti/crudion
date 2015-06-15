@@ -1,11 +1,15 @@
 <ion-view view-title="Borrar película">
-    <ion-content class="padding">
-        <div class="list">
-            <a ng-repeat="movie in movies" class="item item-thumbnail-left" href="#/menu/movieDescription" ng-click="selectMovie(movie)">
+    <div class="bar bar-subheader item-input-inset bar-light">
+        <ion-search placeholder="Buscar película" filter="search"></ion-search>
+    </div>
+    <ion-content class="has-subheader">
+        <ion-list show-delete=true>
+            <ion-item ng-repeat="movie in movies | filter:search.value" class="item item-thumbnail-left">
+            <ion-delete-button class="ion-minus-circled" ng-click="deleteMovie(movie)"></ion-delete-button>
                 <img ng-src="{{ movie.image }}">
                 <h2>{{ movie.title }}</h2>
                 <h4>{{ movie.description }}</h4>
-            </a>
-        </div>
+            </ion-item>
+        </ion-list>
     </ion-content>
 </ion-view>

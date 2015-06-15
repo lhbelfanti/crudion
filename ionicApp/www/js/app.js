@@ -51,6 +51,15 @@ angular.module('ionicApp', ['ionic', 'ionicApp.services', 'ionicApp.controllers'
                   }
               }
           })
+          .state('menu.movieToModify', {
+              url: "/movieToModify",
+              views: {
+                  'menuContent': {
+                      templateUrl: "templates/movieToModify.html",
+                      controller: 'MovieToModifyController'
+                  }
+              }
+          })
           .state('menu.delete', {
               url: "/delete",
               views: {

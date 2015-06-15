@@ -2,12 +2,6 @@ angular.module('ionicApp.controllers', [])
 
     //Controller to handle ionicSlideMenu
     .controller('SideMenuController', function($scope, $ionicSideMenuDelegate) {
-        $scope.attendees = [
-            {firstname: 'Nicolas', lastname: 'Cage'},
-            {firstname: 'Jean-Claude', lastname: 'Van Damme'},
-            {firstname: 'Keanu', lastname: 'Reeves'},
-            {firstname: 'Steven', lastname: 'Seagal'}
-        ];
         $scope.toggleLeft = function () {
             $ionicSideMenuDelegate.toggleLeft();
         };
@@ -97,40 +91,73 @@ angular.module('ionicApp.controllers', [])
                     $scope.$apply();
                 },
                 function (err) {
-                    console.log("got camera error ", err);
+                    console.log("ERROR CAMARA ", err);
                 },
                 options
             );
         };
     })
 
-    .controller('ModifyController', function($scope) {
-
-        $scope.activity = [];
-        $scope.arrivedChange = function(attendee) {
-            var msg = attendee.firstname + ' ' + attendee.lastname;
-            msg += (!attendee.arrived ? ' has arrived, ' : ' just left, ');
-            msg += new Date().getMilliseconds();
-            $scope.activity.push(msg);
-            if($scope.activity.length > 3) {
-                $scope.activity.splice(0, 1);
-            }
+    .controller('ModifyController', function($rootScope, moviesService) {
+        $rootScope.movies = moviesService.all();
+        $rootScope.selectMovieToModify = function(movie){
+            $rootScope.movieToModifyId = movie.id;
         };
-
     })
 
-    .controller('DeleteController', function($scope) {
+    .controller('MovieToModifyController', function($scope, moviesService) {
+        $scope.showForm = true;
+        $scope.movieToModify = moviesService.get($scope.movieToModifyId);
 
-        $scope.activity = [];
-        $scope.arrivedChange = function(attendee) {
-            var msg = attendee.firstname + ' ' + attendee.lastname;
-            msg += (!attendee.arrived ? ' has arrived, ' : ' just left, ');
-            msg += new Date().getMilliseconds();
-            $scope.activity.push(msg);
-            if($scope.activity.length > 3) {
-                $scope.activity.splice(0, 1);
+        $scope.submit = function() {
+            if(!$scope.newMovie.title || !$scope.newMovie.description || /*!$scope.newMovie.image ||*/ !$scope.newMovie) {
+                $scope.showAlert();
+                return;
             }
+            
+            moviesService.modiftMovie($scope.movieToModify);
+            $scope.showConfirm();
         };
 
+        $scope.showAlert = function() {
+            var alertPopup = $ionicPopup.alert({
+                title: 'Datos faltantes',
+                template: 'Falta ingresar datos'
+            });
+        };
+
+        $scope.showConfirm = function() {
+            var alertPopup = $ionicPopup.alert({
+                title: 'Película modificada',
+                template: 'La película fue modificada con éxito'
+            });
+        };
+    })
+
+    .controller('DeleteController', function($scope, $ionicPopup, moviesService) {
+        $scope.movies = moviesService.all();
+        $scope.deleteMovie = function (movie) {
+            $scope.showConfirm(movie);
+            
+        };
+
+        $scope.showConfirm = function(movie) {
+            var confirmPopup = $ionicPopup.confirm({
+                title: 'Borrar película',
+                template: '¿Desea borrar la película?',
+                cancelText: 'No',
+                cancelType: 'button-assertive',
+                okText: 'Si',
+                okType: 'button-balanced'
+            });
+            confirmPopup.then(function(res) {
+                if(res) {
+                    moviesService.deleteMovie(movie);
+                } else {
+
+                }
+                confirmPopup.close();
+            });
+        };
     });
 
