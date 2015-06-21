@@ -7,31 +7,29 @@ angular.module('ionicApp.controllers', [])
         };
     })
 
-    .controller('HomeController', function($rootScope, $stateParams, MoviesService) {
-        $rootScope.movies = MoviesService.all();
-        $rootScope.selectMovie = function(movie){
-            $rootScope.selectedMovieId = movie.id;
+    .controller('HomeController', function($scope, MoviesService) {
+        $scope.movies = MoviesService.getMovies();
+        $scope.selectMovie = function(movie){
+            MoviesService.setSelectedMovieId(movie.id);
         };
     })
 
-    .controller('MovieDescriptionController', function($scope, $stateParams, MoviesService) {
-        $scope.selectedMovie = MoviesService.get($scope.selectedMovieId);
+    .controller('MovieDescriptionController', function($scope, MoviesService) {
+        $scope.selectedMovie = MoviesService.getSelectedMovie();
     })
 
     .controller('AddController', function($scope, $state, $ionicPopup, MoviesService, CameraService) {
-
-        $scope.image = document.getElementById('imgPlaceHolder');
-        $scope.showForm = true;
         $scope.newMovie = {};
+        $scope.image = document.getElementById('imgPlaceHolder');
         
         $scope.submit = function() {
-            if(!$scope.newMovie.title || !$scope.newMovie.description || /*!$scope.newMovie.image ||*/ !$scope.newMovie) {
+            if(!$scope.newMovie || !$scope.newMovie.title || !$scope.newMovie.description || !$scope.newMovie.image) {
                 $scope.showAlert();
                 return;
             }
             
             MoviesService.addMovie($scope.newMovie);
-            $scope.$apply();
+            //$scope.$apply();
             $scope.showConfirm();
         };
 
@@ -53,45 +51,50 @@ angular.module('ionicApp.controllers', [])
             });
             confirmPopup.then(function(res) {
                 if(res) {
-                    $scope.newMovie = {};
-                    $scope.image.src = '/img/ionic.png';
+                    $scope.clearForm();
                 } else {
+                    $scope.clearForm();
                     $state.go('menu.home');
                 }
                 confirmPopup.close();
             });
         };
 
+        $scope.clearForm = function() {
+            $scope.newMovie = {};
+            $scope.image.src = '/img/ionic.png';
+        }
+
         $scope.selectPicture = function() {
             CameraService.selectPicture().then(function(imageData) {
                 console.log(imageData);
                 $scope.image.src = 'data:image/jpeg;base64,' + imageData;
                 $scope.newMovie.image = 'data:image/jpeg;base64,' + imageData;
-                $scope.$apply();
+                //$scope.$apply();
             }, function(err) {
                 console.err(err);
             });
         };
     })
 
-    .controller('ModifyController', function($rootScope, MoviesService) {
-        $rootScope.movies = MoviesService.all();
-        $rootScope.selectMovieToModify = function(movie){
-            $rootScope.movieToModifyId = movie.id;
+    .controller('ModifyController', function($scope, MoviesService) {
+        $scope.movies = MoviesService.getMovies();
+        $scope.selectMovieToModify = function(movie){
+            MoviesService.setMovieToModifyId(movie.id);
         };
     })
 
-    .controller('MovieToModifyController', function($scope, MoviesService) {
-        $scope.showForm = true;
-        $scope.movieToModify = MoviesService.get($scope.movieToModifyId);
+    .controller('MovieToModifyController', function($scope, $ionicPopup, MoviesService, CameraService) {
+        $scope.movieToModify = MoviesService.getMovieToModify();
 
         $scope.submit = function() {
-            if(!$scope.newMovie.title || !$scope.newMovie.description || /*!$scope.newMovie.image ||*/ !$scope.newMovie) {
+            if(!$scope.movieToModify || !$scope.movieToModify.title || !$scope.movieToModify.description || !$scope.movieToModify.image) {
                 $scope.showAlert();
                 return;
             }
             
-            MoviesService.modiftMovie($scope.movieToModify);
+            MoviesService.modifyMovie($scope.movieToModify);
+            //$scope.$apply();
             $scope.showConfirm();
         };
 
@@ -108,14 +111,22 @@ angular.module('ionicApp.controllers', [])
                 template: 'La película fue modificada con éxito'
             });
         };
+
+        $scope.modifyPicture = function() {
+            CameraService.selectPicture().then(function(imageData) {
+                $scope.movieToModify.image = 'data:image/jpeg;base64,' + imageData;
+                //$scope.$apply();
+            }, function(err) {
+                console.err(err);
+            });
+        }
     })
 
     .controller('DeleteController', function($scope, $ionicPopup, MoviesService) {
-        $scope.movies = MoviesService.all();
+        $scope.movies = MoviesService.getMovies();
 
         $scope.deleteMovie = function (movie) {
             $scope.showConfirm(movie);
-            
         };
 
         $scope.showConfirm = function(movie) {
@@ -130,8 +141,9 @@ angular.module('ionicApp.controllers', [])
             confirmPopup.then(function(res) {
                 if(res) {
                     MoviesService.deleteMovie(movie);
+                    //$scope.$apply();
                 } else {
-
+                    //Do nothing   
                 }
                 confirmPopup.close();
             });

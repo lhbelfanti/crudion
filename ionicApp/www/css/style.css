@@ -1,1 +1,21 @@
-/* Empty. Add your own CSS if you like */
+input[reset-field] {
+  padding-right: 19px;
+}
+
+/* hide the built-in IE10+ clear field icon */
+input[reset-field]::-ms-clear {
+  display: none;
+}
+
+/* hide cancel icon for search type */
+input[reset-field]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+/* icon styles */
+input[reset-field] + .custom-icon {
+  position: relative;
+  right: 50px;
+  color: #C0C0C0;
+  cursor: default;
+}

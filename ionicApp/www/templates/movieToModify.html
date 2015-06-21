@@ -1,6 +1,6 @@
 <ion-view view-title="Película a modificar">
     <ion-content>
-        <form class="list" ng-show="showForm">
+        <form class="list" ng-show="true">
             <label class="item item-input">
                 <input type="text" placeholder="Título" ng-model="movieToModify.title">
             </label>
@@ -11,7 +11,7 @@
                 <img style="margin:0px auto;display:block " src="{{ movieToModify.image }}" height="240" width="168" id="imgPlaceHolder">
             </div>
             <div class="padding">
-                <a class="button button-energized" ng-click="selectPicture()">
+                <a class="button button-energized" ng-click="modifyPicture()">
                     <i class="mdi-image-camera-alt small">Cambiar imagen</i>
                 </a>
             </div>

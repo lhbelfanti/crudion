@@ -3,7 +3,7 @@ angular.module('ionicApp.services', [])
 /**
  * A simple EXAMPLE!!!!!!!! service that returns some data.
  */
-    .factory('MoviesService', function() {
+    .factory('DataService', function() {
       // Might use a resource here that returns a JSON array
 
       // Some fake testing data
@@ -29,53 +29,121 @@ angular.module('ionicApp.services', [])
       ];
 
       return {
-        all: function() {
+        getMovies: function() {
           return movies;
         },
-        get: function(movieId) {
-          return movies[movieId];
-        },
         addMovie: function(movie) {
-          movies.push(movie);
+          //ADD MOVIE TO DB
+          //movies.push(movie);
         },
         deleteMovie: function(movie) {
+          //DELETE MOVIE FROM DB
+          /*
           for (var i = 0; i < movies.length; i++) {
             if(movies[i].id == movie.id) {
               movies.splice(i, 1);
               break;
             }
           }
+          */
         },
         modifyMovie: function(movie) {
+          //MODIFY MOVIE ON DB
+          /*
           for (var i = 0; i < movies.length; i++) {
             if(movies[i].id == movie.id) {
               movies[i] = movie;
             }
           }
+          */
         }
       };
     })
 
+    .factory('MoviesService', function(DataService) {
+      var _selectedMovieId = 0;
+      var _movieToModifyId = {};
+      var _movies = DataService.getMovies();
+
+      //Functions start
+      return {
+        // --- Common code ---
+        getMovies: function() {
+          return _movies;
+        },
+        // --- HomeController and MovieDescriptionController ---
+        setSelectedMovieId: function(movieId) {
+          _selectedMovieId = movieId;
+        },
+        getSelectedMovie: function() {
+          for (var i = 0; i < _movies.length; i++) {
+            if(_movies[i].id == _selectedMovieId) {
+              return _movies[i];
+            }
+          }
+        },
+        // --- AddController ---
+        addMovie: function(movie) {
+          var lastMovieId = _movies[_movies.length-1].id;
+          movie.id = lastMovieId + 1;
+          _movies.push(movie);
+          DataService.addMovie(movie);
+        },
+        // --- ModifyController and MovieToModifyController ---
+        setMovieToModifyId: function(movieId) {
+          _movieToModifyId = movieId;
+        },
+        getMovieToModify: function() {
+          for (var i = 0; i < _movies.length; i++) {
+            if(_movies[i].id == _movieToModifyId) {
+              return _movies[i];
+            }
+          }
+        },
+        modifyMovie: function(movie) {
+          for (var i = 0; i < _movies.length; i++) {
+            if(_movies[i].id == movie.id) {
+              _movies[i] = movie;
+              DataService.modifyMovie(movie);
+              break;
+            }
+          }
+        },
+        // --- DeleteController ---
+        deleteMovie: function(movie) {
+          for (var i = 0; i < _movies.length; i++) {
+            if(_movies[i].id == movie.id) {
+              _movies.splice(i, 1);
+              DataService.deleteMovie(movie);
+              break;
+            }
+          }
+        }
+      }
+      //Functions end
+    })
+
     .factory('CameraService', ['$q', function($q) {
-        var pictureSource;
-        var destinationType;
+        var _pictureSource;
+        var _destinationType;
         var q = $q.defer();
 
         ionic.Platform.ready(function() {
             if (!navigator.camera) {
                 return;
             }
-            destinationType = navigator.camera.DestinationType.DATA_URL;
-            pictureSource = navigator.camera.PictureSourceType.PHOTOLIBRARY;
+            _destinationType = navigator.camera.DestinationType.DATA_URL;
+            _pictureSource = navigator.camera.PictureSourceType.PHOTOLIBRARY;
         });
 
         return {
           selectPicture: function(){
             var options =   {
-              quality: 50,
-              destinationType: destinationType,
-              sourceType: pictureSource,
-              encodingType: 0
+              quality: 75,
+              destinationType: _destinationType,
+              sourceType: _pictureSource,
+              encodingType: 0,
+              allowEdit: false
             };
             
             if (!navigator.camera) {
@@ -83,7 +151,6 @@ angular.module('ionicApp.services', [])
             }
         
             navigator.camera.getPicture(function(result) {
-              // Do any magic you need
               q.resolve(result);
             }, function(err) {
               q.reject(err);
@@ -129,8 +196,8 @@ angular.module('ionicApp.services', [])
             },
             template: '<div class="item-input-wrapper">' +
                         '<i class="icon ion-android-search"></i>' +
-                        '<input type="search" placeholder="{{placeholder}}" ng-model="search.value">' +
-                        '<i ng-if="search.value.length > 0" ng-click="clearSearch()" class="icon ion-close"></i>' +
+                        '<input type="search" reset-field placeholder="{{placeholder}}" ng-model="search.value">' +
+                        '<i ng-if="search.value.length > 0" ng-click="clearSearch()" class="icon ion-close custom-icon"></i>' +
                       '</div>'
         };
     });
