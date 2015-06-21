@@ -7,18 +7,18 @@ angular.module('ionicApp.controllers', [])
         };
     })
 
-    .controller('HomeController', function($rootScope, $stateParams, moviesService) {
-        $rootScope.movies = moviesService.all();
+    .controller('HomeController', function($rootScope, $stateParams, MoviesService) {
+        $rootScope.movies = MoviesService.all();
         $rootScope.selectMovie = function(movie){
             $rootScope.selectedMovieId = movie.id;
         };
     })
 
-    .controller('MovieDescriptionController', function($scope, $stateParams, moviesService) {
-        $scope.selectedMovie = moviesService.get($scope.selectedMovieId);
+    .controller('MovieDescriptionController', function($scope, $stateParams, MoviesService) {
+        $scope.selectedMovie = MoviesService.get($scope.selectedMovieId);
     })
 
-    .controller('AddController', function($scope, $state, $ionicPopup, moviesService) {
+    .controller('AddController', function($scope, $state, $ionicPopup, MoviesService, CameraService) {
 
         $scope.image = document.getElementById('imgPlaceHolder');
         $scope.showForm = true;
@@ -30,7 +30,8 @@ angular.module('ionicApp.controllers', [])
                 return;
             }
             
-            moviesService.addMovie($scope.newMovie);
+            MoviesService.addMovie($scope.newMovie);
+            $scope.$apply();
             $scope.showConfirm();
         };
 
@@ -53,6 +54,7 @@ angular.module('ionicApp.controllers', [])
             confirmPopup.then(function(res) {
                 if(res) {
                     $scope.newMovie = {};
+                    $scope.image.src = '/img/ionic.png';
                 } else {
                     $state.go('menu.home');
                 }
@@ -60,54 +62,28 @@ angular.module('ionicApp.controllers', [])
             });
         };
 
-        //Camera functions
-        var pictureSource;
-        var destinationType;
-        ionic.Platform.ready(function() {
-            if (!navigator.camera) {
-                return;
-            }
-            pictureSource = navigator.camera.PictureSourceType.PHOTOLIBRARY;
-            destinationType = navigator.camera.DestinationType.FILE_URI;
-        });
-
         $scope.selectPicture = function() {
-            var options =   {
-                quality: 50,
-                destinationType: destinationType,
-                sourceType: pictureSource,
-                encodingType: 0
-            };
-            
-            if (!navigator.camera) {
-                return;
-            }
-        
-            navigator.camera.getPicture(
-                function (imageURI) {
-                    console.log("got camera success ", imageURI);
-                    $scope.image.src = imageURI;
-                    $scope.newMovie = imageURI;
-                    $scope.$apply();
-                },
-                function (err) {
-                    console.log("ERROR CAMARA ", err);
-                },
-                options
-            );
+            CameraService.selectPicture().then(function(imageData) {
+                console.log(imageData);
+                $scope.image.src = 'data:image/jpeg;base64,' + imageData;
+                $scope.newMovie.image = 'data:image/jpeg;base64,' + imageData;
+                $scope.$apply();
+            }, function(err) {
+                console.err(err);
+            });
         };
     })
 
-    .controller('ModifyController', function($rootScope, moviesService) {
-        $rootScope.movies = moviesService.all();
+    .controller('ModifyController', function($rootScope, MoviesService) {
+        $rootScope.movies = MoviesService.all();
         $rootScope.selectMovieToModify = function(movie){
             $rootScope.movieToModifyId = movie.id;
         };
     })
 
-    .controller('MovieToModifyController', function($scope, moviesService) {
+    .controller('MovieToModifyController', function($scope, MoviesService) {
         $scope.showForm = true;
-        $scope.movieToModify = moviesService.get($scope.movieToModifyId);
+        $scope.movieToModify = MoviesService.get($scope.movieToModifyId);
 
         $scope.submit = function() {
             if(!$scope.newMovie.title || !$scope.newMovie.description || /*!$scope.newMovie.image ||*/ !$scope.newMovie) {
@@ -115,7 +91,7 @@ angular.module('ionicApp.controllers', [])
                 return;
             }
             
-            moviesService.modiftMovie($scope.movieToModify);
+            MoviesService.modiftMovie($scope.movieToModify);
             $scope.showConfirm();
         };
 
@@ -134,8 +110,9 @@ angular.module('ionicApp.controllers', [])
         };
     })
 
-    .controller('DeleteController', function($scope, $ionicPopup, moviesService) {
-        $scope.movies = moviesService.all();
+    .controller('DeleteController', function($scope, $ionicPopup, MoviesService) {
+        $scope.movies = MoviesService.all();
+
         $scope.deleteMovie = function (movie) {
             $scope.showConfirm(movie);
             
@@ -152,7 +129,7 @@ angular.module('ionicApp.controllers', [])
             });
             confirmPopup.then(function(res) {
                 if(res) {
-                    moviesService.deleteMovie(movie);
+                    MoviesService.deleteMovie(movie);
                 } else {
 
                 }

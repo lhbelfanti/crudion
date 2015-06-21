@@ -3,7 +3,7 @@ angular.module('ionicApp.services', [])
 /**
  * A simple EXAMPLE!!!!!!!! service that returns some data.
  */
-    .factory('moviesService', function() {
+    .factory('MoviesService', function() {
       // Might use a resource here that returns a JSON array
 
       // Some fake testing data
@@ -55,6 +55,45 @@ angular.module('ionicApp.services', [])
         }
       };
     })
+
+    .factory('CameraService', ['$q', function($q) {
+        var pictureSource;
+        var destinationType;
+        var q = $q.defer();
+
+        ionic.Platform.ready(function() {
+            if (!navigator.camera) {
+                return;
+            }
+            destinationType = navigator.camera.DestinationType.DATA_URL;
+            pictureSource = navigator.camera.PictureSourceType.PHOTOLIBRARY;
+        });
+
+        return {
+          selectPicture: function(){
+            var options =   {
+              quality: 50,
+              destinationType: destinationType,
+              sourceType: pictureSource,
+              encodingType: 0
+            };
+            
+            if (!navigator.camera) {
+              return;
+            }
+        
+            navigator.camera.getPicture(function(result) {
+              // Do any magic you need
+              q.resolve(result);
+            }, function(err) {
+              q.reject(err);
+            }, 
+            options);
+
+            return q.promise;
+          }
+        }
+    }])
 
     .directive('ionSearch', function() {
         return {
