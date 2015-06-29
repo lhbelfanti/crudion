@@ -7,6 +7,17 @@
 // 'ionicApp.controllers' is found in controllers.js
 angular.module('ionicApp', ['ionic', 'ionicApp.services', 'ionicApp.controllers'])
 
+    .constant('ApiEndpoint', {
+      url: 'http://localhost:8100/actions'
+    })
+
+    .config(['$httpProvider', function($httpProvider) {
+            $httpProvider.defaults.useXDomain = true;
+            $httpProvider.defaults.headers.common = 'Content-Type: application/json';
+            delete $httpProvider.defaults.headers.common['X-Requested-With'];
+        }
+    ])
+
     .config(function($stateProvider, $urlRouterProvider) {
 
       $stateProvider

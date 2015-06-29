@@ -8,5 +8,11 @@
   "watchPatterns": [
     "www/**/*",
     "!www/lib/**/*"
+  ],
+  "proxies": [
+    {
+      "path": "/actions",
+      "proxyUrl": "http://localhost:80/actions"
+    }
   ]
 }

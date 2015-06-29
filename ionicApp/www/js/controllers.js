@@ -23,7 +23,7 @@ angular.module('ionicApp.controllers', [])
         $scope.image = document.getElementById('imgPlaceHolder');
         
         $scope.submit = function() {
-            if(!$scope.newMovie || !$scope.newMovie.title || !$scope.newMovie.description || !$scope.newMovie.image) {
+            if(!$scope.newMovie || !$scope.newMovie.title || !$scope.newMovie.description /*|| !$scope.newMovie.image*/) {
                 $scope.showAlert();
                 return;
             }
