@@ -9,6 +9,9 @@ angular.module('ionicApp.controllers', [])
 
     .controller('HomeController', function($scope, MoviesService) {
         $scope.movies = MoviesService.getMovies();
+        $scope.$on('moviesLoaded', function(){
+            $scope.movies = MoviesService.getMovies();
+        });
         $scope.selectMovie = function(movie){
             MoviesService.setSelectedMovieId(movie.id);
         };

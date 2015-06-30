@@ -1,40 +1,29 @@
 angular.module('ionicApp.services', [])
 
-    .factory('DataService',function($http, ApiEndpoint) {
+    .factory('DataService',function($http, $q, ApiEndpoint) {
       var _dataLoaded = false;
       $http.defaults.useXDomain = true;
       return {
         getMovies: function() {
-          if(!_dataLoaded) {
-            _dataLoaded = true;
-            $http({
-              method: "get",
-              url: ApiEndpoint.url + '/getMovies.php',
-              headers: {
-                'Access-Control-Allow-Origin' : '*',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              }
-            }).
-            success(function(data, status, headers, config) {
-              console.log("getMovies() success");
+          var deferred = $q.defer();
+          $http({
+            method: "get",
+            url: ApiEndpoint.url + '/getMovies.php',
+            headers: {
+              'Access-Control-Allow-Origin' : '*',
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          }).
+          success(function(data) {
+            console.log("Movies request success");
+            deferred.resolve(data);
+          }).
+          error(function() {
+            deferred.reject("An error occured while fetching movies");
+          });
 
-              /*
-              var _movies = JSON.parse(JSON.stringify(data));
-              for(var i = 0; i < _movies.length; i++) {
-                console.log("Objeto " + _movies[i].id);
-                console.log("title: " + _movies[i].title);
-                console.log("description: " + _movies[i].description);
-                console.log("image: " + _movies[i].image);
-              }
-              */
-              return JSON.parse(JSON.stringify(data));
-            }).
-            error(function(data, status, headers, config) {
-              console.log("getMovies() fail");
-              return data;
-            });
-          }
+          return deferred.promise;
         },
         addMovie: function(movie) {
           //ADD MOVIE TO DB
@@ -64,17 +53,29 @@ angular.module('ionicApp.services', [])
       };
     })
 
-    .factory('MoviesService', function(DataService) {
+    .factory('MoviesService', function($rootScope, DataService) {
       var _selectedMovieId = 0;
       var _movieToModifyId = {};
       var _movies = [];
-      _movies = DataService.getMovies();
 
       //Functions start
       return {
         // --- Common code ---
         getMovies: function() {
-          return _movies;
+          if(_movies.length <= 0) {
+            DataService.getMovies().then(function(data){
+              _movies = JSON.parse(JSON.stringify(data));
+              $rootScope.$broadcast('moviesLoaded');
+              return _movies;
+            },
+            function(errorMessage){
+              console.log(errorMessage);
+              return _movies;
+            });
+          }
+          else {
+            return _movies;
+          }
         },
         // --- HomeController and MovieDescriptionController ---
         setSelectedMovieId: function(movieId) {
@@ -89,6 +90,7 @@ angular.module('ionicApp.services', [])
         },
         // --- AddController ---
         addMovie: function(movie) {
+          console.log(_movies[1].title);
           var lastMovieId = _movies[_movies.length-1].id;
           movie.id = lastMovieId + 1;
           _movies.push(movie);
