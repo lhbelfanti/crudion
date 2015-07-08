@@ -1,10 +1,15 @@
 <?php
 	require_once("database_connect.php");
-	$movieTitle = $_GET['title'];
-	$movieDescription = $_GET['description'];
-	$movieImage = $_GET['image'];
 
-	$query = "INSERT INTO movies(title, description, image) VALUES (". $movieTitle . ", " . $movieDescription . ", " . $movieImage . ")";
+	header('Content-Type: application/json');
+
+	$postdata = file_get_contents("php://input");
+	$request = json_decode($postdata);
+	$movieTitle = $request->title;
+	$movieDescription = $request->description;
+	$movieImage = $request->image;
+
+	$query = "INSERT INTO movies(title, description, image) VALUES ('$movieTitle','$movieDescription','$movieImage')";
 
 	if ($db->query($query) === TRUE) {
 	    echo "Record updated successfully";

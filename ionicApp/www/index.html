@@ -12,7 +12,6 @@
 
         <!-- app's css -->
         <link href="css/ionic.app.css" rel="stylesheet">
-        <link href="css/style.css" rel="stylesheet">
         <!-- app's script -->
         <script src="js/app.js"></script>
         <script src="js/services.js"></script>
@@ -34,23 +33,5 @@ ionic run android
 adb logcat Cordova:D DroidGap:D CordovaLog:D *:S 
 adb logcat -c
 
-              /*
-              var _movies = JSON.parse(JSON.stringify(data));
-              for(var i = 0; i < _movies.length; i++) {
-                console.log("Objeto " + _movies[i].id);
-                console.log("title: " + _movies[i].title);
-                console.log("description: " + _movies[i].description);
-                console.log("image: " + _movies[i].image);
-              }
-              */
-
-              {
-              method: "get",
-              url: ApiEndpoint.url + '/getMovies.php',
-              headers: {
-                'Access-Control-Allow-Origin' : '*',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              }
-
+ALTER TABLE movies AUTO_INCREMENT = 4
 -->

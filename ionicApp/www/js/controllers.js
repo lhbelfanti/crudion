@@ -91,7 +91,7 @@ angular.module('ionicApp.controllers', [])
         $scope.movieToModify = MoviesService.getMovieToModify();
 
         $scope.submit = function() {
-            if(!$scope.movieToModify || !$scope.movieToModify.title || !$scope.movieToModify.description || !$scope.movieToModify.image) {
+            if(!$scope.movieToModify || !$scope.movieToModify.title || !$scope.movieToModify.description /*|| !$scope.movieToModify.image*/) {
                 $scope.showAlert();
                 return;
             }

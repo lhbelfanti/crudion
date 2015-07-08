@@ -5,15 +5,12 @@ angular.module('ionicApp.services', [])
       $http.defaults.useXDomain = true;
       return {
         getMovies: function() {
+          //GET MOVIES FROM DB
           var deferred = $q.defer();
           $http({
             method: "get",
             url: ApiEndpoint.url + '/getMovies.php',
-            headers: {
-              'Access-Control-Allow-Origin' : '*',
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
+            headers: ApiEndpoint.headers
           }).
           success(function(data) {
             console.log("Movies request success");
@@ -27,28 +24,72 @@ angular.module('ionicApp.services', [])
         },
         addMovie: function(movie) {
           //ADD MOVIE TO DB
-          //movies.push(movie);
+          var deferred = $q.defer();
+          $http({
+            method: "post",
+            url: ApiEndpoint.url + '/addMovie.php',
+            headers: ApiEndpoint.headers,
+            data: {
+              'title': movie.title,
+              'description': movie.description,
+              'image': movie.image
+            }
+          }).
+          success(function(data) {
+            console.log("Movie added successfully");
+            deferred.resolve(data);
+          }).
+          error(function() {
+            deferred.reject("An error occured while adding movie");
+          });
+          return deferred.promise;
         },
         deleteMovie: function(movie) {
           //DELETE MOVIE FROM DB
-          /*
-          for (var i = 0; i < movies.length; i++) {
-            if(movies[i].id == movie.id) {
-              movies.splice(i, 1);
-              break;
-            }e
-          }
-          */
+          var deferred = $q.defer();
+          $http({
+            method: "post",
+            url: ApiEndpoint.url + '/deleteMovie.php',
+            headers: ApiEndpoint.headers,
+            data: {
+              'id': movie.id,
+            }
+          }).
+          success(function(data) {
+            console.log("Movie deleted successfully");
+            deferred.resolve(data);
+          }).
+          error(function() {
+            deferred.reject("An error occured while deleting movie");
+          });
+          return deferred.promise;
         },
         modifyMovie: function(movie) {
-          //MODIFY MOVIE ON DB
-          /*
-          for (var i = 0; i < movies.length; i++) {
-            if(movies[i].id == movie.id) {
-              movies[i] = movie;
+          //MODIFY MOVIE AND SAVE ON DB
+          console.log("title: " + movie.title);
+          console.log("desc: " + movie.description);
+          console.log("img: " + movie.image);
+          console.log("id: " + movie.id);
+          var deferred = $q.defer();
+          $http({
+            method: "post",
+            url: ApiEndpoint.url + '/modifyMovie.php',
+            headers: ApiEndpoint.headers,
+            data: {
+              'title': movie.title,
+              'description': movie.description,
+              'image': movie.image,
+              'id': movie.id
             }
-          }
-          */
+          }).
+          success(function(data) {
+            console.log("Movie updated successfully");
+            deferred.resolve(data);
+          }).
+          error(function() {
+            deferred.reject("An error occured while updating movie");
+          });
+          return deferred.promise;
         }
       };
     })
@@ -90,7 +131,6 @@ angular.module('ionicApp.services', [])
         },
         // --- AddController ---
         addMovie: function(movie) {
-          console.log(_movies[1].title);
           var lastMovieId = _movies[_movies.length-1].id;
           movie.id = lastMovieId + 1;
           _movies.push(movie);
