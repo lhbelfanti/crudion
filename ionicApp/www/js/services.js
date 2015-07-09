@@ -1,97 +1,101 @@
 angular.module('ionicApp.services', [])
 
-    .factory('DataService',function($http, $q, ApiEndpoint) {
-      var _dataLoaded = false;
-      $http.defaults.useXDomain = true;
+    .factory('DataService', function($http, $q, ApiEndpoint, HTTPRequestService, RequestConstants) {
       return {
         getMovies: function() {
           //GET MOVIES FROM DB
           var deferred = $q.defer();
-          $http({
-            method: "get",
-            url: ApiEndpoint.url + '/getMovies.php',
-            headers: ApiEndpoint.headers
-          }).
-          success(function(data) {
+          HTTPRequestService.makeHttpRequest(RequestConstants.get, 'getMovies')
+          .then(function(data) {
             console.log("Movies request success");
             deferred.resolve(data);
-          }).
-          error(function() {
+          },
+          function(error) {
             deferred.reject("An error occured while fetching movies");
           });
-
+          
           return deferred.promise;
         },
         addMovie: function(movie) {
           //ADD MOVIE TO DB
           var deferred = $q.defer();
-          $http({
-            method: "post",
-            url: ApiEndpoint.url + '/addMovie.php',
-            headers: ApiEndpoint.headers,
-            data: {
+          var data = {
               'title': movie.title,
               'description': movie.description,
               'image': movie.image
-            }
-          }).
-          success(function(data) {
+          }
+          HTTPRequestService.makeHttpRequest(RequestConstants.post, 'addMovie', data)
+          .then(function(data) {
             console.log("Movie added successfully");
             deferred.resolve(data);
-          }).
-          error(function() {
+          },
+          function(error) {
             deferred.reject("An error occured while adding movie");
           });
+
           return deferred.promise;
         },
         deleteMovie: function(movie) {
           //DELETE MOVIE FROM DB
           var deferred = $q.defer();
-          $http({
-            method: "post",
-            url: ApiEndpoint.url + '/deleteMovie.php',
-            headers: ApiEndpoint.headers,
-            data: {
+          var data = {
               'id': movie.id,
-            }
-          }).
-          success(function(data) {
+          }
+          HTTPRequestService.makeHttpRequest(RequestConstants.post, 'deleteMovie', data)
+          .then(function(data) {
             console.log("Movie deleted successfully");
             deferred.resolve(data);
-          }).
-          error(function() {
-            deferred.reject("An error occured while deleting movie");
+          },
+          function(error) {
+           deferred.reject("An error occured while deleting movie");
           });
+
           return deferred.promise;
         },
         modifyMovie: function(movie) {
           //MODIFY MOVIE AND SAVE ON DB
-          console.log("title: " + movie.title);
-          console.log("desc: " + movie.description);
-          console.log("img: " + movie.image);
-          console.log("id: " + movie.id);
           var deferred = $q.defer();
-          $http({
-            method: "post",
-            url: ApiEndpoint.url + '/modifyMovie.php',
-            headers: ApiEndpoint.headers,
-            data: {
+          var data = {
               'title': movie.title,
               'description': movie.description,
               'image': movie.image,
               'id': movie.id
-            }
-          }).
-          success(function(data) {
-            console.log("Movie updated successfully");
+          }
+          HTTPRequestService.makeHttpRequest(RequestConstants.post, 'modifyMovie', data)
+          .then(function(data) {
+            console.log("Movie modified successfully");
             deferred.resolve(data);
-          }).
-          error(function() {
-            deferred.reject("An error occured while updating movie");
+          },
+          function(error) {
+           deferred.reject("An error occured while modifiying movie");
           });
+
           return deferred.promise;
         }
       };
+    })
+
+    .service('HTTPRequestService', function($http, $q, ApiEndpoint, RequestConstants) {
+        return {
+          makeHttpRequest: function(method, file, data) {
+            var deferred = $q.defer();
+            var request = {};
+            request.headers = RequestConstants.headers;
+            request.method = method;
+            request.url = ApiEndpoint.url + '/' + file + '.php';
+            if(data != null)
+              request.data = data;
+
+            $http(request)
+            .success(function(data) {
+              deferred.resolve(data);
+            })
+            .error(function() {
+              deferred.reject("An error occured");
+            });
+            return deferred.promise;
+          }
+        };
     })
 
     .factory('MoviesService', function($rootScope, DataService) {

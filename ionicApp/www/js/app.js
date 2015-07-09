@@ -8,13 +8,18 @@
 angular.module('ionicApp', ['ionic', 'ionicApp.services', 'ionicApp.controllers'])
 
     .constant('ApiEndpoint', {
-      url: 'http://localhost:8100/actions',
+      url: 'http://localhost:8100/actions'
+    })
+
+    .constant('RequestConstants', {
       headers:  
       {
         'Access-Control-Allow-Origin' : '*',
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      },
+      post: 'POST',
+      get: 'GET'
     })
 
     .config(['$httpProvider', function($httpProvider) {
