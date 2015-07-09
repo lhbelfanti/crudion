@@ -12,5 +12,7 @@
     	die("Connection failed: " . $db->connect_error);
 	}
 
+	$db->set_charset('utf8');
+
 	mysql_query("SET NAMES 'utf8'");
 ?>

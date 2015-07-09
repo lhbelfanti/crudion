@@ -1,7 +1,7 @@
 <?php
 	require_once("database_connect.php");
 
-	header('Content-Type: application/json');
+	//header('Content-Type: application/json');
 
 	$postdata = file_get_contents("php://input");
 	$request = json_decode($postdata);

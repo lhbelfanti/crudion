@@ -4,7 +4,6 @@
 	header('Content-Type: application/json');
 
 	$query = "SELECT * FROM movies";
-	$db->set_charset('utf8');
 	$result = $db->query($query) or die($db->error.__LINE__);
 
 	$arr = array();
