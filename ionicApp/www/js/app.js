@@ -8,7 +8,7 @@
 angular.module('ionicApp', ['ionic', 'ionicApp.services', 'ionicApp.controllers'])
 
     .constant('ApiEndpoint', {
-      url: 'http://localhost:8100/actions'
+      url: 'http://10.0.0.15:80/actions'
     })
 
     .constant('RequestConstants', {

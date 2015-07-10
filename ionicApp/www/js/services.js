@@ -11,7 +11,7 @@ angular.module('ionicApp.services', [])
             deferred.resolve(data);
           },
           function(error) {
-            deferred.reject("An error occured while fetching movies");
+            deferred.reject("An error occured while fetching movies: " + error);
           });
           
           return deferred.promise;
@@ -30,7 +30,7 @@ angular.module('ionicApp.services', [])
             deferred.resolve(data);
           },
           function(error) {
-            deferred.reject("An error occured while adding movie");
+            deferred.reject("An error occured while adding movie: " + error);
           });
 
           return deferred.promise;
@@ -47,7 +47,7 @@ angular.module('ionicApp.services', [])
             deferred.resolve(data);
           },
           function(error) {
-           deferred.reject("An error occured while deleting movie");
+           deferred.reject("An error occured while deleting movie: " + error);
           });
 
           return deferred.promise;
@@ -67,7 +67,7 @@ angular.module('ionicApp.services', [])
             deferred.resolve(data);
           },
           function(error) {
-           deferred.reject("An error occured while modifiying movie");
+           deferred.reject("An error occured while modifiying movie: " + error);
           });
 
           return deferred.promise;
