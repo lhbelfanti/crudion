@@ -192,11 +192,14 @@ angular.module('ionicApp.services', [])
         return {
           selectPicture: function(){
             var options =   {
-              quality: 75,
+              quality: 20,
               destinationType: _destinationType,
               sourceType: _pictureSource,
               encodingType: 0,
-              allowEdit: false
+              correctOrientation: true,
+              allowEdit: false,
+              targetWidth: 300,
+              targetHeight: 300
             };
             
             if (!navigator.camera) {

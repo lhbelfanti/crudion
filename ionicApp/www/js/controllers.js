@@ -26,7 +26,7 @@ angular.module('ionicApp.controllers', [])
         $scope.image = document.getElementById('imgPlaceHolder');
         
         $scope.submit = function() {
-            if(!$scope.newMovie || !$scope.newMovie.title || !$scope.newMovie.description /*|| !$scope.newMovie.image*/) {
+            if(!$scope.newMovie || !$scope.newMovie.title || !$scope.newMovie.description || !$scope.newMovie.image) {
                 $scope.showAlert();
                 return;
             }
@@ -91,7 +91,7 @@ angular.module('ionicApp.controllers', [])
         $scope.movieToModify = MoviesService.getMovieToModify();
 
         $scope.submit = function() {
-            if(!$scope.movieToModify || !$scope.movieToModify.title || !$scope.movieToModify.description /*|| !$scope.movieToModify.image*/) {
+            if(!$scope.movieToModify || !$scope.movieToModify.title || !$scope.movieToModify.description || !$scope.movieToModify.image) {
                 $scope.showAlert();
                 return;
             }
